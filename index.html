@@ -7,80 +7,139 @@
   <title>Sathya Narayana – Gita Assistant</title>
   <style>
     body {
-      font-family: 'Segoe UI', sans-serif;
       background-color: #121212;
-      color: #f0f0f0;
-      text-align: center;
+      color: #f5f5dc;
+      font-family: 'Georgia', serif;
+      margin: 0;
       padding: 2rem;
     }
+    h1 {
+      text-align: center;
+      color: #ffd700;
+    }
     button {
-      padding: 1rem 2rem;
-      margin: 1rem;
+      background-color: #333;
+      color: #ffd700;
+      border: 2px solid #ffd700;
+      padding: 0.75rem 1.5rem;
+      margin: 0.5rem;
       font-size: 1rem;
-      border: none;
-      border-radius: 8px;
       cursor: pointer;
-      background-color: #1e88e5;
-      color: white;
+      border-radius: 8px;
     }
     button:hover {
-      background-color: #1565c0;
+      background-color: #444;
+    }
+    .section {
+      margin: 2rem 0;
+      padding: 1rem;
+      border: 1px solid #ffd700;
+      border-radius: 8px;
     }
     .output {
-      margin-top: 2rem;
-      font-size: 1.2rem;
+      margin-top: 1rem;
+      padding: 1rem;
+      background-color: #1e1e1e;
+      border-radius: 8px;
       white-space: pre-wrap;
     }
   </style>
 </head>
 <body>
-  <h1>🕉️ Sathya Narayana – Gita Assistant</h1>
-  <p>“Ask Krishna. Receive wisdom. Reflect daily.”</p>
+  <h1>🪔 Sathya Narayana – Gita Assistant</h1>
 
-  <button onclick="generateShloka()">📜 Daily Shloka</button>
-  <button onclick="krishnaQuestion()">🙏 Let Krishna Question You</button>
+  <div class="section">
+    <h2>📜 Daily Shloka Generator</h2>
+    <button onclick="generateShloka()">Get Today's Shloka</button>
+    <div class="output" id="shlokaOutput">Click the button to receive a shloka.</div>
+  </div>
 
-  <div class="output" id="output"></div>
+  <div class="section">
+    <h2>🪞 Krishna Questions You</h2>
+    <button onclick="askKrishna()">Ask Me</button>
+    <div class="output" id="krishnaOutput">Click to receive a daily question from Krishna.</div>
+  </div>
+
+  <div class="section">
+    <h2>🧠 Ask Krishna Anything (Pick a Theme)</h2>
+    <button onclick="giveAnswer('confusion')">Confusion</button>
+    <button onclick="giveAnswer('grief')">Grief</button>
+    <button onclick="giveAnswer('duty')">Duty</button>
+    <button onclick="giveAnswer('anger')">Anger</button>
+    <button onclick="giveAnswer('detachment')">Detachment</button>
+    <div class="output" id="themeOutput">Select a theme to receive Krishna’s guidance.</div>
+  </div>
 
   <script>
     const shlokas = [
-      "Chapter 2, Verse 47:
-कर्मण्येवाधिकारस्ते मा फलेषु कदाचन ।
-ma karma-phala-hetur bhūr mā te saṅgo ’stv akarmaṇi ॥
+      "श्रीभगवानुवाच |
+क्लैब्यं मा स्म गमः पार्थ नैतत्त्वय्युपपद्यते |
+क्षुद्रं हृदयदौर्बल्यं त्यक्त्वोत्तिष्ठ परन्तप ॥ 2.3 ॥
 
-You have the right to perform your actions, but not to the fruits thereof.",
-      "Chapter 4, Verse 7:
-यदा यदा हि धर्मस्य ग्लानिर्भवति भारत ।
-अभ्युत्थानम् अधर्मस्य तदाऽअत्मानं सृजाम्यहम् ॥
+Translation:
+Do not yield to unmanliness, O son of Pritha. It does not become you. Shake off this petty weakness of heart and arise, O scorcher of enemies!",
+      "योगस्थः कुरु कर्माणि सङ्गं त्यक्त्वा धनञ्जय |
+सिद्ध्यसिद्ध्योः समो भूत्वा समत्वं योग उच्यते ॥ 2.48 ॥
 
-Whenever righteousness declines, I manifest Myself.",
-      "Chapter 18, Verse 66:
-सर्वधर्मान्परित्यज्य मामेकं शरणं व्रज ।
-अहं त्वां सर्वपापेभ्यो मोक्षयिष्यामि मा शुचः ॥
+Translation:
+Perform your duty equipoised, O Arjuna, abandoning all attachment to success or failure. Such equanimity is called Yoga.",
+      "कर्मण्येवाधिकारस्ते मा फलेषु कदाचन |
+मा कर्मफलहेतुर्भूर्मा ते सङ्गोऽस्त्वकर्मणि ॥ 2.47 ॥
 
-Abandon all duties and come to Me alone for shelter."
+Translation:
+You have a right to perform your prescribed duties, but you are not entitled to the fruits of your actions."
     ];
 
-    const questions = [
-      "What are you truly attached to right now?",
-      "Are you acting from fear or purpose today?",
-      "Whom did you serve selflessly today?",
-      "What truth are you avoiding?",
-      "Can you let go of the outcome and focus on your dharma?"
+    const krishnaQuestions = [
+      "What desire clouded your action today?",
+      "Did you act without attachment or were you expecting a reward?",
+      "Were you honest in word and thought today?",
+      "What fear did you avoid confronting today?",
+      "What duty did you delay, and why?"
     ];
+
+    const themes = {
+      confusion: "श्रीभगवानुवाच |
+न त्वेवाहं जातु नासं न त्वं नेमे जनाधिपाः |
+न चैव न भविष्यामः सर्वे वयमतः परम् ॥ 2.12 ॥
+
+Translation:
+Never was there a time when I did not exist, nor you, nor all these kings; nor in the future shall any of us cease to be.",
+      grief: "श्रीभगवानुवाच |
+अशोच्यानन्वशोचस्त्वं प्रज्ञावादांश्च भाषसे |
+गतासूनगतासूंश्च नानुशोचन्ति पण्डिताः ॥ 2.11 ॥
+
+Translation:
+You grieve for those who should not be grieved for, yet speak words of wisdom. The wise grieve neither for the living nor the dead.",
+      duty: "श्रेयान्स्वधर्मो विगुणः परधर्मात्स्वनुष्ठितात् |
+स्वधर्मे निधनं श्रेयः परधर्मो भयावहः ॥ 3.35 ॥
+
+Translation:
+It is better to fail in one’s own duty than to succeed in the duty of another. Better is death in one’s own dharma; the dharma of another brings fear.",
+      anger: "क्रोधाद्भवति सम्मोहः सम्मोहात्स्मृतिविभ्रमः |
+स्मृतिभ्रंशाद् बुद्धिनाशो बुद्धिनाशात्प्रणश्यति ॥ 2.63 ॥
+
+Translation:
+From anger comes delusion; from delusion, the loss of memory; from loss of memory, the destruction of intelligence; and from the destruction of intelligence, one perishes.",
+      detachment: "युक्तः कर्मफलं त्यक्त्वा शान्तिमाप्नोति नैष्ठिकीम् |
+अयुक्तः कामकारेण फले सक्तो निबध्यते ॥ 5.12 ॥
+
+Translation:
+The one who is disciplined, renouncing the fruit of action, attains lasting peace. But the unbalanced one, driven by desire, is bound by attachment to result."
+    };
 
     function generateShloka() {
-      const s = shlokas[Math.floor(Math.random() * shlokas.length)];
-      document.getElementById("output").textContent = "📖 Daily Shloka:
-
-" + s;
+      const shloka = shlokas[Math.floor(Math.random() * shlokas.length)];
+      document.getElementById("shlokaOutput").textContent = shloka;
     }
 
-    function krishnaQuestion() {
-      const q = questions[Math.floor(Math.random() * questions.length)];
-      document.getElementById("output").textContent = "🧘 Krishna asks:
+    function askKrishna() {
+      const question = krishnaQuestions[Math.floor(Math.random() * krishnaQuestions.length)];
+      document.getElementById("krishnaOutput").textContent = question;
+    }
 
-" + q;
+    function giveAnswer(theme) {
+      document.getElementById("themeOutput").textContent = themes[theme];
     }
   </script>
 </body>
